@@ -5,8 +5,6 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 
-import config
-
 naming_convention = {
     "ix": 'ix_%(column_0_label)s',
     "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -20,7 +18,8 @@ migrate = Migrate()
 # 함수명으로 create_app 대신 다른 이름을 사용하면 정상으로 동작하지 않는다. create_app은 플라스크 내부에서 정의된 함수명이다.
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(config)
+    app.config.from_envvar('APP_CONFIG_FILE')
+    #  "환경 변수 APP_CONFIG_FILE에 정의된 파일을 환경 파일로 사용하겠다"
     
     # ORM
     db.init_app(app)
