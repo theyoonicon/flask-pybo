@@ -1,6 +1,6 @@
 # pybo.py 와 pybo/__init__.py는 동일한 pybo 모듈이다.
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -14,6 +14,9 @@ naming_convention = {
 }
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
+
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 # 함수명으로 create_app 대신 다른 이름을 사용하면 정상으로 동작하지 않는다. create_app은 플라스크 내부에서 정의된 함수명이다.
 def create_app():
@@ -39,6 +42,9 @@ def create_app():
     # 필터
     from .filter import format_datetime
     app.jinja_env.filters['datetime'] = format_datetime
+    
+    # 오류페이지
+    app.register_error_handler(404, page_not_found)
     
     return app
 
